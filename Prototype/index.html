@@ -1,0 +1,431 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="css/treejs/style.min.css" />
+<script src="./js/jquery-1.11.3.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/treejs/jstree.min.js"></script>
+<script src="./js/interact-1.2.4.js"></script>
+</head>
+
+<body>
+<!--
+##############################################################################################
+##############################################################################################
+								Menu Area
+##############################################################################################
+##############################################################################################
+-->	
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand">DigFAST</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">File <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class='before_start'><a href="#" onClick="startWithImage()">Start with Image</a></li>
+            <li class="hidden after_start"><a href="#">Save TEI file</a></li>
+            <li role="separator" class="divider hidden after_start"></li>
+            <li class="hidden after_start"><a href="#">Restart</a></li>
+          </ul>
+        </li>
+		<li class="dropdown hidden after_start">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Selected Element<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Edit Attributes</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Move Up (TEI)</a></li>
+			<li><a href="#">Move Down (TEI)</a></li>
+			<li role="separator" class="divider"></li>
+			<li><a href="#" onClick="toggleElementLocker(event)">Lock/Unlock (Rectangle)</a></li>
+			<li role="separator" class="divider"></li>
+			<li><a href="#">Move to Front (Rectangle)</a></li>
+			<li><a href="#">Move to Background (Rectangle)</a></li>
+			<li role="separator" class="divider"></li>
+			<li><a href="#" onClick="deleteSelected(event)">Delete Selected Element</a></li>
+          </ul>
+        </li>
+		<li id="dia_stage" class="hidden after_start"><a href="#" onClick="addProfileDesc()">Add Diachronic Staging</a></li>
+      </ul>
+      
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">About</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Export<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#" onClick="onTEIdownload(event)">Export TEI Document</a></li>
+            <li><a href="#" onClick="onSVGdownload(event)">Export SVG Document</a></li>
+		   </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+<!--
+##############################################################################################
+##############################################################################################
+								Edit Area, Divided in sourceDoc and TEI Area
+##############################################################################################
+##############################################################################################
+-->	
+<div id="editContainer"> 
+	<!--
+	##############################################################################################
+								sourceDoc/SVG Area
+	##############################################################################################
+	-->	
+		
+		<!--The button-group for sourceDoc scaling that is shown in the left hand corner on top of the svg field-->
+		<div class="btn-group btn-group-s" role="group" aria-label="..." id="resizeButtons">
+				<button type="button" onClick="scaleCanvas(-1)" class="btn btn-default">
+					<span class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span>
+				</button>
+				<button type="button" onClick="scaleCanvas(0)" class="btn btn-default">
+					<span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+				</button>
+				<button type="button" onClick="scaleCanvas(1)" class="btn btn-default">
+					<span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+				</button>
+		</div>
+	
+		<!--the actual svg area-->
+		<div id="svg_area" class="resize-container">
+		
+			<div id="beginnButtons">
+				<!--<a href="#" onClick="startWithoutImage()"><div class="well">Start Without Image</div></a>-->
+				
+				<a href="#" onClick="startWithImage()"><div class="well">Start With Image File</div></a>
+				<input id="imgFile" onchange="addImageToSVG(event)" style="display:none" type="file" />
+			</div>
+			
+			<!--here an svg file is added. At a later stage a "load image" button should load a sourceDoc in the back of the svg -->
+			<div id="trulala" style="position: relative; left: 0; top: 0;">
+				<img id="myimage" width="600" style="position: relative; top: 0; left: 0;">
+				<svg id="myCanvas" width="600" height="500" style="position: absolute; top: 0; left: 0;">
+				</svg>
+			</div>
+		</div>
+
+
+	<!--
+	##############################################################################################
+								TEI+Worktools Area
+	##############################################################################################
+	-->	
+		<div id="text_area">
+			<!--Container for tree.js-->
+			<div id="html1">
+				
+			</div>
+			
+		
+			<div id="rotation_area">
+				Rotate Active Zone: 
+				<a id="rot_left" onClick="rotateRect(lastMovedId,-0.5)"><img class="rot_img" src="./img/rotate_anticlock.png"/></a>
+				<a id="rot_right" onClick="rotateRect(lastMovedId,0.5)"><img class="rot_img" src="./img/rotate_clock.png"/></a>
+			</div>	
+		
+		<script src="./js/DigFast.js"></script>
+		<script src="./js/rotate.js"></script>
+		<script type="text/javascript">
+		
+			
+			$(document).ready(function(){
+					$.jstree.defaults.core.themes.variant = "large";
+					$('#html1').jstree({'core' : {'check_callback' : true}}); 	
+			});
+			
+			function startWithoutImage(){
+				createDefaultJstree();
+				$('#beginnButtons').hide();
+			};
+			
+			var teiDoc = document.implementation.createDocument("http://www.tei-c.org/ns/1.0", "TEI", null);
+			
+			function startWithImage(){
+				createDefaultJstree();
+				$('#imgFile').trigger('click');
+				$('#beginnButtons').hide();
+				$('#trulala').show();
+				$("#html1").jstree('create_node', 'sourceDoc_1_jstree', { id:'graphic_1_jstree', text:"&lt;graphic&gt;"}, 'last');
+				$('#html1').jstree('select_node','sourceDoc_1_jstree');
+				$('.after_start').removeClass('hidden');
+				$('.before_start').addClass('hidden');
+			};
+			
+			
+			function addTeiElement(elementName,parentId,lastOrAfter,elId){
+				if(elId === undefined || elId==''){
+					var realId=elementName+'_'+guid();
+				}else{
+					var realId=elId;
+				}
+				var jsTreeId=realId+'_jstree';
+				var teiElement = createTeiElement(elementName,realId);
+				
+				//if no parentId is given, the element is added to the root element
+				if(parentId =="" || parentId===undefined || parentId==null){
+					teiDoc.documentElement.appendChild(teiElement);
+					$("#html1").jstree('create_node', 'tei_jstree', { id:jsTreeId, text:"&lt;"+elementName+"&gt;"}, 'last');
+				//else the element is added to the given parentId (either last inside oder "after" as a sibbling)
+				} else{
+					$("#html1").jstree('create_node', parentId+'_jstree', { id:jsTreeId, text:"&lt;"+elementName+"&gt;"}, lastOrAfter);
+					if(lastOrAfter=="last"){
+						teiDoc.getElementById(parentId).appendChild(teiElement);}
+					else{
+						teiDoc.getElementById(parentId).parentNode.insertBefore(teiElement,teiDoc.getElementById(parentId).nextSibling);}
+				}
+			}
+			
+			
+			
+			function createTeiElement(elName,elfId){
+					var myElement = document.createElementNS('http://www.tei-c.org/ns/1.0',elName);
+					if(elfId){
+					myElement.setAttribute('id',elfId);}
+					return (myElement);
+			}
+			
+			
+			
+			function createDefaultJstree(){
+					$("#html1").jstree('create_node', '#', { id:'tei_jstree', text:"&lt;TEI&gt;"}, 'inside');
+						addTeiElement('teiHeader','','last','teiHeader');
+							addTeiElement('fileDesc','teiHeader','last','fileDesc');
+								addTeiElement('titleStmt','fileDesc','last','titleStmt');
+									addTeiElement('title','titleStmt','last','title_1');
+								addTeiElement('publicationStmt','fileDesc','last','publicationStmt');			
+									addTeiElement('p','publicationStmt','last','');
+								addTeiElement('sourceDesc','fileDesc','last','sourceDesc');
+									addTeiElement('p','sourceDesc','last','');
+						addTeiElement('sourceDoc','','last','sourceDoc_1');
+						
+						
+					$("#html1").on('select_node.jstree', function (e,data){
+							var selectedA = $("#html1").jstree().get_selected();
+							showElementOptions(selectedA);
+							/*when node is selected, but there is no corresponding rectangle, the last activated rectangle get deactivated, otherwise the corresponding rectangle will be activated*/
+							if(document.getElementById(selectedA[0].replace('_jstree','_rect'))){
+								activateRectangle(selectedA[0].replace('_jstree',''));}else if (document.getElementById(lastMovedId)){
+								deactivateRectangle();
+							}
+							if(selectedA[0].indexOf('zone')>-1){
+								$('#rotation_area').show();
+							}else{
+								$('#rotation_area').hide();
+							}
+					}).jstree();
+					
+			}
+			
+			
+			function showElementOptions(treeId){
+				$('.optionIcons').remove();
+				var fullId=treeId[0];
+				var positionString = (fullId+'_anchor');
+				//TODO: maybe the elementName should not be retrieved via id conventions?
+				var teiElementName= fullId.split('_')[0];
+				var allowedInside=[], allowedAfter =[], allowedAttributes=[];
+				if(teiElementName == 'sourceDoc'){
+					allowedInside = ['graphic','surface','surfaceGrp'];
+					//allowedAfter =['sourceDoc','text'];
+				}else if(teiElementName =='surface'){
+					allowedInside = ['zone','line','graphic','surface','surfaceGrp'];
+					allowedAfter =['surface','surfaceGrp'];
+				}else if(teiElementName =='surfaceGrp'){
+					allowedInside = ['surface','surfaceGrp'];
+					allowedAfter =['surface','surfaceGrp'];
+				} else if(teiElementName =="zone"){
+					allowedInside = ['line','zone','graphic','surface','add','del'];
+					allowedAfter =['line','zone','graphic','surface'];
+				} else if(teiElementName =="line"){
+					allowedInside = ['line','zone','add','del'];
+					allowedAfter =['line','zone','graphic','surface'];
+				} else if(teiElementName =="creation"){
+					allowedInside = ['listChange'];
+				} else if(teiElementName =="listChange"){
+					allowedInside = ['listChange','change'];
+					allowedAfter =['listChange'];
+				} else if (teiElementName =="change"){
+					allowedAfter = ['listChange','change'];
+				}
+				
+				var buttonGroup = makeButtons(fullId, allowedInside,allowedAfter);
+				$(document.getElementById(positionString)).after(buttonGroup);
+			}
+			
+			function makeButtons(elId,allowedInside,allowedAfter){
+				var parentDiv = document.createElement("div");
+					$(parentDiv).attr({
+					"class":"btn-group optionIcons",
+					"role":"group",
+					"aria-label":"...",
+					"style":"display: inline; margin-left: 5px"
+					});
+					
+				//p and title elements get a textfield, but are not in any way connected to the canvas
+				if(elId.indexOf('p_')==0 || elId.indexOf('title_')==0 || elId.indexOf('change_')==0){
+					var oldtext=getTeiText(elId);
+					var myInput = document.createElement("input");
+						$(myInput).attr({
+							"type":"text",
+							"value":oldtext,
+							"class":"text-input",
+							});
+					parentDiv.appendChild(myInput);
+					$(myInput).keyup(function(){
+							//update Text on TEI in background
+							setTeiText(elId,$(myInput).val());
+							} );
+				}
+				//If its a zone or a line: add the textfield for Transcript
+				if( (elId.indexOf('zone') > -1) || (elId.indexOf('line') > -1) ){
+					var oldtext = getRectText(elId);
+					var myInput = document.createElement("input");
+						$(myInput).attr({
+							"type":"text",
+							"value":oldtext,
+							"class":"text-input",
+							});
+					parentDiv.appendChild(myInput);
+					$(myInput).keyup(function(){
+							//update Text on rectangle and on TEI in background
+							setRectText(elId, $(myInput).val());
+							setTeiText(elId,$(myInput).val());
+							} );
+				}
+				
+				/*Add Inside Button*/
+				if(allowedInside.length>0){
+					var myDiv = document.createElement("div");
+					$(myDiv).attr({
+					"class":"dropdown",
+					"style":"display: inline; margin-left: 5px"
+					});
+					var myButton = document.createElement("button");	
+						$(myButton).attr({
+							"class": "btn btn-default btn-xs dropdown-toggle",
+							"type": "button",
+							"id" : "btn_allowedInside",
+							"data-toggle":"dropdown",
+							"aria-haspopup":"true", 
+							"aria-expanded":"false"
+						});
+					var t = document.createTextNode("add Inside");   
+					var myCaret = document.createElement("span");
+						$(myCaret).attr("class","caret");
+					myButton.appendChild(t);
+					myButton.appendChild(myCaret);
+					myDiv.appendChild(myButton);
+					var myUl=document.createElement("ul");
+						$(myUl).attr({
+							"class":"dropdown-menu",
+							"aria-labelledby": "btn_allowedInside"
+						});
+					for (item in allowedInside){
+						var myLi = document.createElement("li");
+						var myLink = document.createElement("a");
+							$(myLink).attr({
+								"href":"#",
+								"onClick":"generateNode('last','"+elId+"','"+allowedInside[item]+"')"
+							});
+							myLink.appendChild(document.createTextNode(allowedInside[item]));
+						myLi.appendChild(myLink);
+						myUl.appendChild(myLi);
+					}
+					myDiv.appendChild(myUl);
+					parentDiv.appendChild(myDiv);
+				}
+				/*Add After Button*/
+				if(allowedAfter.length>0){
+					var myDiv2 = document.createElement("div");
+					$(myDiv2).attr({
+					"class":"dropdown",
+					"style":"display: inline; margin-left: 5px"
+					});
+					var myButton2 = document.createElement("button");	
+						$(myButton2).attr({
+							"class": "btn btn-default btn-xs dropdown-toggle",
+							"type": "button",
+							"id" : "btn_allowedAfter",
+							"data-toggle":"dropdown",
+							"aria-haspopup":"true", 
+							"aria-expanded":"false"
+						});
+					var t2 = document.createTextNode("add After");   
+					var myCaret2 = document.createElement("span");
+						$(myCaret2).attr("class","caret");
+					myButton2.appendChild(t2);
+					myButton2.appendChild(myCaret2);
+					myDiv2.appendChild(myButton2);
+					var myUl2=document.createElement("ul");
+						$(myUl2).attr({
+							"class":"dropdown-menu",
+							"aria-labelledby": "btn_allowedAfter"
+						});
+					for (item2 in allowedAfter){
+						var myLi2 = document.createElement("li");
+						var myLink2 = document.createElement("a");
+							$(myLink2).attr({
+								"href":"#",
+								"onClick":"generateNode('after','"+elId+"','"+allowedAfter[item2]+"')"
+							});
+							myLink2.appendChild(document.createTextNode(allowedAfter[item2]));
+						myLi2.appendChild(myLink2);
+						myUl2.appendChild(myLi2);
+					}
+					myDiv2.appendChild(myUl2);
+					parentDiv.appendChild(myDiv2);
+				}
+				
+				
+				
+				return (parentDiv);
+			}
+			
+			function generateNode(where,parentNodeId,nodeType){
+						var teiId=nodeType+'_'+guid();
+						var parentTeiNodeId= parentNodeId.replace('_jstree','');
+						var rectId=teiId+'_jstree';
+						addTeiElement(nodeType,parentTeiNodeId,where,teiId);
+						
+						if(nodeType=='surface' | nodeType=='zone' | nodeType=='line'){
+							//here the default dimensions have to be adjusted and selected smarter
+							new Rectangle (0, 0, 400, 100, svgCanvas, rectId, nodeType, 0);
+							//whenever a rect is painted, the TEI coordinates have to be generated/updated
+							updateTEIcoordinates(teiId);
+						}
+				}
+				
+			/*function to generate unique ids for the elements in the tree*/
+			function guid() {
+				function s4() {
+				return Math.floor((1 + Math.random()) * 0x10000)
+					.toString(16)
+					.substring(1);
+				}
+				var testId = s4() + s4() + '-' + s4() + s4();
+				return testId;
+				}
+			
+</script>
+			
+	</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+
+
+
+/*outer container for the "edit-view": contains svg_area on the left and text_area on the right side*/
+#editContainer{
+	position:absolute;
+    width: 95%;
+	margin: auto;
+    padding: 10px;
+	padding-top:0px;
+    background: white;
+	height: 80%;
+	
+}
+
+#rotation_area{
+	display:none;
+}	
+
+#resizeButtons{
+	position: absolute;
+	margin: auto;
+	left: 30px;
+	top: -12px;
+	z-index: 1;
+}
+
+
+	
+#svg_area {
+	float: left;
+	height: 100%;
+	min-width: 600px;
+	width: 800px;
+	padding: 5px;
+	margin-left:10px;
+	margin-bottom:30px;
+	resize: horizontal;
+    overflow: auto;
+	
+	/*border + shadow around the SVG-Area*/
+	border: 1px solid #ccc;
+	-webkit-box-shadow: 10px 10px 5px 0px rgba(204,204,204,1);
+	-moz-box-shadow: 10px 10px 5px 0px rgba(204,204,204,1);
+	box-shadow: 10px 10px 5px 0px rgba(204,204,204,1);
+}
+
+#text_area {
+	float: left;
+    margin-left: 20px; /*700svg_area.width+10svg_area.margin+10distance*/
+    height: 200px;
+    background: white;
+	padding: 25px;
+	width: 400px;
+}
+
+.text-input {
+	width: 100%;
+    padding-left: 10px;
+	padding-right: 10px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+#beginnButtons{
+		padding-top: 200px;
+		text-align: center;
+		width: 50%;
+		margin: 0 auto;
+}	
+
+#trulala{
+	position: relative; 
+	left: 0; 
+	top: 0;
+	
+}
+
+.tinyicon{
+	width: 10px;
+	height: 10px;
+}
+
+.textfeld {
+	width: 150px;
+	border-radius: 25px;
+    border: 2px solid #8AC007;
+    padding: 5px;
+	margin: 0px;
+}
+
+
+
+.rsvg {
+  width: 400;
+  height: 240px;
+  background-color: #2e9;
+  
+  -ms-touch-action: none;
+      touch-action: none;
+}
+
+.edit-rectangle {
+  fill:grey;
+  fill-opacity: 0.1;
+  stroke:#808080;
+  stroke-opacity:1
+}
+
+.locked-rectangle{
+  fill:green;
+  fill-opacity: 0.05;
+  stroke:#F0F0F0;
+  stroke-opacity:0.5
+}
+.active-rectangle{
+  fill:blue;
+  fill-opacity: 0.3;
+  stroke:#8AC007;
+  stroke-opacity:1
+}
+.locked-rectangle{
+  fill:green;
+}
+
+/*TODO: visually highlight parent surface and/or zone*/
+.active-surface{
+	
+}
+
+.active-zone{
+	
+}
+
+
+.rot_img{
+	width: 50px;
+	height: 50px;
+}
+.rot_img:hover{
+	opacity: 0.5;
+}
+
+
+body { margin: 0; }
+
+
+
+.element_surface>text{
+	opacity: 0.05;
+}	
+
+
+.btn_after_start{
+	display:none;
+}
