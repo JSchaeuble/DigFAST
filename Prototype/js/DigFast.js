@@ -8,9 +8,14 @@ var svgCanvas = document.querySelector('#myCanvas'),
 var parentgroup = document.createElementNS(svgNS, 'g');
 	 parentgroup.setAttribute('id','scalingParent');
 	 svgCanvas.appendChild(parentgroup);
-
-    
+ 
 var TEIcontents;
+
+//global vars for the image & its' scaling
+var origHeight=0;
+var origWidth=0;
+var scalingFactor=1.0;
+
  
 //constructor for a new rectangle. x/y is its Startpoint, w and h its dimension, svgCanvas the SVG-node to add it to, myId is its Id. 
 function Rectangle (x, y, w, h, svgCanvas, myId, myText, rotationAngle) {
@@ -40,7 +45,7 @@ function Rectangle (x, y, w, h, svgCanvas, myId, myText, rotationAngle) {
 
   this.myg.appendChild(this.texti);
   this.myg.appendChild(this.el);
-       
+  
   rectangles.push(this);
 
   this.draw();
@@ -92,8 +97,8 @@ Rectangle.prototype.scaleFont = function(){
    var vertX = this.x+(3*this.stroke); //keeps the font 3*the border away from the rectangle (vertically and horizontally)
    var vertY = this.y+this.h-(3*this.stroke);
    if(this.texti.textContent!=""){
-   this.texti.setAttribute("transform", "matrix("+value+", 0, 0, "+value+", "+vertX+","+vertY+")");}		
-	}
+	this.texti.setAttribute("transform", "matrix("+value+", 0, 0, "+value+", "+vertX+","+vertY+")");}		
+}
 
 
 //sets the active element in the tree and on the svg
@@ -104,7 +109,7 @@ function setActive(idToSet) {
 		$('#html1').jstree('deselect_all');
 		$('#html1').jstree('select_node',idToSet+"_jstree");
 		$("#html1").jstree("open_node", idToSet+"_jstree");
-		}
+	}
 }
 
 
@@ -133,30 +138,27 @@ function closestAncestor(el, selector) {
 
 /*function activates a rectangle on the svg canvas*/
 function activateRectangle(idToSet){
-	//alert(idToSet);
-var idWithRect= idToSet+'_rect';
-if(document.getElementById(idWithRect)){
-	if(document.getElementById(lastMovedId)){
-		//if the last active rectangle is locked, only remove active-rectangle, but keep it locked...
+	var idWithRect= idToSet+'_rect';
+	if(document.getElementById(idWithRect)){
+		if(document.getElementById(lastMovedId)){
+			//if the last active rectangle is locked, only remove active-rectangle, but keep it locked...
+			if(isLocked(lastMovedId)){
+				document.getElementById(lastMovedId).getElementsByTagName('rect')[0].setAttributeNS(null,'class', 'locked-rectangle');
+			//...else remove active-rectangle but keep it and unlocked "edit-rectangle"
+			}else{
+				document.getElementById(lastMovedId).getElementsByTagName('rect')[0].setAttributeNS(null,'class', 'edit-rectangle');}
+			}
+		//set "lastMovedId" to the new rectangle
+		lastMovedId=idWithRect;
 		if(isLocked(lastMovedId)){
-			document.getElementById(lastMovedId).getElementsByTagName('rect')[0].setAttributeNS(null,'class', 'locked-rectangle');
-		//...else remove active-rectangle but keep it and unlocked "edit-rectangle"
+			document.getElementById(idWithRect).getElementsByTagName('rect')[0].setAttribute('class', 'active-rectangle locked-rectangle');
 		}else{
-			document.getElementById(lastMovedId).getElementsByTagName('rect')[0].setAttributeNS(null,'class', 'edit-rectangle');}
-		}
-	//set "lastMovedId" to the new rectangle
-	lastMovedId=idWithRect;
-	if(isLocked(lastMovedId)){
-		document.getElementById(idWithRect).getElementsByTagName('rect')[0].setAttribute('class', 'active-rectangle locked-rectangle');
-	}else{
-		document.getElementById(idWithRect).getElementsByTagName('rect')[0].setAttribute('class', 'active-rectangle edit-rectangle');}
-	//activateParentGroupRectangles(idToSet);
-}/*else{
-	var temp=document.getElementById(lastMovedId).getElementsByTagName('rect')[0].getAttribute('class').replace('active-rectangle','');
-	document.getElementById(lastMovedId).getElementsByTagName('rect')[0].setAttribute('class',temp);
-}*/
+			document.getElementById(idWithRect).getElementsByTagName('rect')[0].setAttribute('class', 'active-rectangle edit-rectangle');}
+		//activateParentGroupRectangles(idToSet);
+	}
 }	
 
+/*function to deactivate the currently activated rectangle (if any)*/
 function deactivateRectangle(){
 	var temp=document.getElementById(lastMovedId).getElementsByTagName('rect')[0].getAttribute('class').replace('active-rectangle','');
 	document.getElementById(lastMovedId).getElementsByTagName('rect')[0].setAttribute('class',temp);
@@ -168,7 +170,6 @@ function activateParentGroupRectangles(idToSet){
 	if(idToSet.indexOf('zone')>-1 || idToSet.indexOf('line')>-1)
 	{
 		var ancientSurface =  $('#'+myTeiId).attr('id');
-		//alert(myTeiId+' - '+ancientSurface);//hlight closest parent surface
 	} 	
 }
 
@@ -188,7 +189,6 @@ interact('.edit-rectangle')
 	//TEI coordinates are updated AFTER the object is moved, otherwise there are too many updates on the cost of runtime
 	onend: function (event) {
 	  updateTEIcoordinates(rectangles[event.target.getAttribute('data-index')].myId.replace("_rect",""));
-	  //myg.setAttribute('transform','rotate('+rotationAngle+','+x+','+y+')');
 	}
   })
   .resizable({
@@ -206,9 +206,7 @@ interact('.edit-rectangle')
 	  updateTEIcoordinates(rectangles[event.target.getAttribute('data-index')].myId.replace("_rect",""));
 	}
   });
-
-
-interact.maxInteractions(Infinity);
+//interact.maxInteractions(Infinity); //should not be neccessary anymore, already in .resizable and .draggable
 
 /*Function to set the text of a rectangle (change)*/
 function setRectText(anchorId, newText){
@@ -229,6 +227,7 @@ function getRectText(anchorId){
 	return (testText);
 }
 
+/*sets the text-node of the given ID to the given text*/
 function setTeiText(elemId,newtext){
 	$(teiDoc.getElementById(elemId.replace('_jstree',''))).text(newtext);
 }		
@@ -247,17 +246,12 @@ function addProfileDesc(){
 
 
 /*if image is selected (in case there was none found in the TEI-file or file system) this image is drawn on the screen. TODO: adjust image and SVG dimensions!*/
-var origHeight=0;
-var origWidth=0;
-var scalingFactor=1.0;
-
-
 function addImageToSVG(event){
   var selectedFile = event.target.files[0];
   var reader = new FileReader();
 
   var imgtag = document.getElementById("myimage");
-  imgtag.title = selectedFile.name;
+	  imgtag.title = selectedFile.name;
   
   var svgtag = document.getElementById("myCanvas");
   //everything that has to be processed after the file has been loaded goes into here:
@@ -267,16 +261,13 @@ function addImageToSVG(event){
   	 image.src=event.target.result;
   	 image.onload = function(){
   	 	//put image on screen
-		//imgtag.src = image.src;
   	 	//set image size, question: should this size be taken from the TEI or from the image? scaling?
 		imgtag.width = this.width;
 		imgtag.height = this.height;
 		$(svgtag).attr("viewBox","0 0 "+imgtag.width +" "+imgtag.height);
   	 	$(svgtag).attr({width:this.width,height:this.height});
-		
 		var imLink = image.src;
 		var svgimg = document.createElementNS(svgNS, 'image');
-	
 			svgimg.setAttributeNS(null,'height',this.height);
 			svgimg.setAttributeNS(null,'width',this.width);
 			svgimg.setAttributeNS('http://www.w3.org/1999/xlink','href', image.src);
@@ -284,22 +275,14 @@ function addImageToSVG(event){
 			svgimg.setAttributeNS(null,'y','0');
 			svgimg.setAttributeNS(null, 'visibility', 'visible');
 			svgCanvas.getElementById('scalingParent').appendChild(svgimg);
-		
-		
   	 	//set global origHeight and origSize for Scaling Functions
   	 	origHeight=this.height;
   	 	origWidth=this.width;
-  	 	
-  	 	//placeTEIrects();
   	 	}
   };
 
   reader.readAsDataURL(selectedFile);
 }
-
-
-
-
 
 
 function processImageFile(event) {
@@ -386,10 +369,7 @@ function placeTEIrects(){
 				//$('.rot_img').css("display","inline");
 			}
 		}
-	}
-	);
-	
-
+	});
 }
 
 
@@ -416,9 +396,7 @@ function deleteSelected(evt){
 					//TODO: remove from rectangles[]
 					//TODO: select parent or other element
 			} 
-	}else{
-		alert("This element can't be deleted!");
-	}
+	}else{alert("This element can't be deleted!");}
 }
 
 /*locks or unlocks a rectangle on the svg canvas*/
@@ -561,3 +539,276 @@ function setSvgScale() {
 	$("#myCanvas").attr("height",scalingFactor*origHeight);
 	$("#myCanvas").find('g[id="scalingParent"]').attr("transform","scale(" + scalingFactor +")");
 }
+
+function startWithoutImage(){
+				createDefaultJstree();
+				$('#beginnButtons').hide();
+			};
+			
+			var teiDoc = document.implementation.createDocument("http://www.tei-c.org/ns/1.0", "TEI", null);
+			
+			function startWithImage(){
+				createDefaultJstree();
+				$('#imgFile').trigger('click');
+				$('#beginnButtons').hide();
+				$('#trulala').show();
+				$("#html1").jstree('create_node', 'sourceDoc_1_jstree', { id:'graphic_1_jstree', text:"&lt;graphic&gt;"}, 'last');
+				$('#html1').jstree('select_node','sourceDoc_1_jstree');
+				$('.after_start').removeClass('hidden');
+				$('.before_start').addClass('hidden');
+			};
+			
+			
+			function addTeiElement(elementName,parentId,lastOrAfter,elId){
+				if(elId === undefined || elId==''){
+					var realId=elementName+'_'+guid();
+				}else{
+					var realId=elId;
+				}
+				var jsTreeId=realId+'_jstree';
+				var teiElement = createTeiElement(elementName,realId);
+				
+				//if no parentId is given, the element is added to the root element
+				if(parentId =="" || parentId===undefined || parentId==null){
+					teiDoc.documentElement.appendChild(teiElement);
+					$("#html1").jstree('create_node', 'tei_jstree', { id:jsTreeId, text:"&lt;"+elementName+"&gt;"}, 'last');
+				//else the element is added to the given parentId (either last inside oder "after" as a sibbling)
+				} else{
+					$("#html1").jstree('create_node', parentId+'_jstree', { id:jsTreeId, text:"&lt;"+elementName+"&gt;"}, lastOrAfter);
+					if(lastOrAfter=="last"){
+						teiDoc.getElementById(parentId).appendChild(teiElement);}
+					else{
+						teiDoc.getElementById(parentId).parentNode.insertBefore(teiElement,teiDoc.getElementById(parentId).nextSibling);}
+				}
+			}
+			
+			
+			
+			function createTeiElement(elName,elfId){
+					var myElement = document.createElementNS('http://www.tei-c.org/ns/1.0',elName);
+					if(elfId){
+					myElement.setAttribute('id',elfId);}
+					return (myElement);
+			}
+			
+			
+			
+			function createDefaultJstree(){
+					$("#html1").jstree('create_node', '#', { id:'tei_jstree', text:"&lt;TEI&gt;"}, 'inside');
+						addTeiElement('teiHeader','','last','teiHeader');
+							addTeiElement('fileDesc','teiHeader','last','fileDesc');
+								addTeiElement('titleStmt','fileDesc','last','titleStmt');
+									addTeiElement('title','titleStmt','last','title_1');
+								addTeiElement('publicationStmt','fileDesc','last','publicationStmt');			
+									addTeiElement('p','publicationStmt','last','');
+								addTeiElement('sourceDesc','fileDesc','last','sourceDesc');
+									addTeiElement('p','sourceDesc','last','');
+						addTeiElement('sourceDoc','','last','sourceDoc_1');
+						
+						
+					$("#html1").on('select_node.jstree', function (e,data){
+							var selectedA = $("#html1").jstree().get_selected();
+							showElementOptions(selectedA);
+							/*when node is selected, but there is no corresponding rectangle, the last activated rectangle get deactivated, otherwise the corresponding rectangle will be activated*/
+							if(document.getElementById(selectedA[0].replace('_jstree','_rect'))){
+								activateRectangle(selectedA[0].replace('_jstree',''));}else if (document.getElementById(lastMovedId)){
+								deactivateRectangle();
+							}
+							if(selectedA[0].indexOf('zone')>-1){
+								$('#rotation_area').show();
+							}else{
+								$('#rotation_area').hide();
+							}
+					}).jstree();
+					
+			}
+			
+			
+			function showElementOptions(treeId){
+				$('.optionIcons').remove();
+				var fullId=treeId[0];
+				var positionString = (fullId+'_anchor');
+				//TODO: maybe the elementName should not be retrieved via id conventions?
+				var teiElementName= fullId.split('_')[0];
+				var allowedInside=[], allowedAfter =[], allowedAttributes=[];
+				if(teiElementName == 'sourceDoc'){
+					allowedInside = ['graphic','surface','surfaceGrp'];
+					//allowedAfter =['sourceDoc','text'];
+				}else if(teiElementName =='surface'){
+					allowedInside = ['zone','line','graphic','surface','surfaceGrp'];
+					allowedAfter =['surface','surfaceGrp'];
+				}else if(teiElementName =='surfaceGrp'){
+					allowedInside = ['surface','surfaceGrp'];
+					allowedAfter =['surface','surfaceGrp'];
+				} else if(teiElementName =="zone"){
+					allowedInside = ['line','zone','graphic','surface','add','del'];
+					allowedAfter =['line','zone','graphic','surface'];
+				} else if(teiElementName =="line"){
+					allowedInside = ['line','zone','add','del'];
+					allowedAfter =['line','zone','graphic','surface'];
+				} else if(teiElementName =="creation"){
+					allowedInside = ['listChange'];
+				} else if(teiElementName =="listChange"){
+					allowedInside = ['listChange','change'];
+					allowedAfter =['listChange'];
+				} else if (teiElementName =="change"){
+					allowedAfter = ['listChange','change'];
+				}
+				
+				var buttonGroup = makeButtons(fullId, allowedInside,allowedAfter);
+				$(document.getElementById(positionString)).after(buttonGroup);
+			}
+			
+			function makeButtons(elId,allowedInside,allowedAfter){
+				var parentDiv = document.createElement("div");
+					$(parentDiv).attr({
+					"class":"btn-group optionIcons",
+					"role":"group",
+					"aria-label":"...",
+					"style":"display: inline; margin-left: 5px"
+					});
+					
+				//p and title elements get a textfield, but are not in any way connected to the canvas
+				if(elId.indexOf('p_')==0 || elId.indexOf('title_')==0 || elId.indexOf('change_')==0){
+					var oldtext=getTeiText(elId);
+					var myInput = document.createElement("input");
+						$(myInput).attr({
+							"type":"text",
+							"value":oldtext,
+							"class":"text-input",
+							});
+					parentDiv.appendChild(myInput);
+					$(myInput).keyup(function(){
+							//update Text on TEI in background
+							setTeiText(elId,$(myInput).val());
+							} );
+				}
+				//If its a zone or a line: add the textfield for Transcript
+				if( (elId.indexOf('zone') > -1) || (elId.indexOf('line') > -1) ){
+					var oldtext = getRectText(elId);
+					var myInput = document.createElement("input");
+						$(myInput).attr({
+							"type":"text",
+							"value":oldtext,
+							"class":"text-input",
+							});
+					parentDiv.appendChild(myInput);
+					$(myInput).keyup(function(){
+							//update Text on rectangle and on TEI in background
+							setRectText(elId, $(myInput).val());
+							setTeiText(elId,$(myInput).val());
+							} );
+				}
+				
+				/*Add Inside Button*/
+				if(allowedInside.length>0){
+					var myDiv = document.createElement("div");
+					$(myDiv).attr({
+					"class":"dropdown",
+					"style":"display: inline; margin-left: 5px"
+					});
+					var myButton = document.createElement("button");	
+						$(myButton).attr({
+							"class": "btn btn-default btn-xs dropdown-toggle",
+							"type": "button",
+							"id" : "btn_allowedInside",
+							"data-toggle":"dropdown",
+							"aria-haspopup":"true", 
+							"aria-expanded":"false"
+						});
+					var t = document.createTextNode("add Inside");   
+					var myCaret = document.createElement("span");
+						$(myCaret).attr("class","caret");
+					myButton.appendChild(t);
+					myButton.appendChild(myCaret);
+					myDiv.appendChild(myButton);
+					var myUl=document.createElement("ul");
+						$(myUl).attr({
+							"class":"dropdown-menu",
+							"aria-labelledby": "btn_allowedInside"
+						});
+					for (item in allowedInside){
+						var myLi = document.createElement("li");
+						var myLink = document.createElement("a");
+							$(myLink).attr({
+								"href":"#",
+								"onClick":"generateNode('last','"+elId+"','"+allowedInside[item]+"')"
+							});
+							myLink.appendChild(document.createTextNode(allowedInside[item]));
+						myLi.appendChild(myLink);
+						myUl.appendChild(myLi);
+					}
+					myDiv.appendChild(myUl);
+					parentDiv.appendChild(myDiv);
+				}
+				/*Add After Button*/
+				if(allowedAfter.length>0){
+					var myDiv2 = document.createElement("div");
+					$(myDiv2).attr({
+					"class":"dropdown",
+					"style":"display: inline; margin-left: 5px"
+					});
+					var myButton2 = document.createElement("button");	
+						$(myButton2).attr({
+							"class": "btn btn-default btn-xs dropdown-toggle",
+							"type": "button",
+							"id" : "btn_allowedAfter",
+							"data-toggle":"dropdown",
+							"aria-haspopup":"true", 
+							"aria-expanded":"false"
+						});
+					var t2 = document.createTextNode("add After");   
+					var myCaret2 = document.createElement("span");
+						$(myCaret2).attr("class","caret");
+					myButton2.appendChild(t2);
+					myButton2.appendChild(myCaret2);
+					myDiv2.appendChild(myButton2);
+					var myUl2=document.createElement("ul");
+						$(myUl2).attr({
+							"class":"dropdown-menu",
+							"aria-labelledby": "btn_allowedAfter"
+						});
+					for (item2 in allowedAfter){
+						var myLi2 = document.createElement("li");
+						var myLink2 = document.createElement("a");
+							$(myLink2).attr({
+								"href":"#",
+								"onClick":"generateNode('after','"+elId+"','"+allowedAfter[item2]+"')"
+							});
+							myLink2.appendChild(document.createTextNode(allowedAfter[item2]));
+						myLi2.appendChild(myLink2);
+						myUl2.appendChild(myLi2);
+					}
+					myDiv2.appendChild(myUl2);
+					parentDiv.appendChild(myDiv2);
+				}
+				
+				
+				
+				return (parentDiv);
+			}
+			
+			function generateNode(where,parentNodeId,nodeType){
+						var teiId=nodeType+'_'+guid();
+						var parentTeiNodeId= parentNodeId.replace('_jstree','');
+						var rectId=teiId+'_jstree';
+						addTeiElement(nodeType,parentTeiNodeId,where,teiId);
+						
+						if(nodeType=='surface' | nodeType=='zone' | nodeType=='line'){
+							//here the default dimensions have to be adjusted and selected smarter
+							new Rectangle (0, 0, 400, 100, svgCanvas, rectId, nodeType, 0);
+							//whenever a rect is painted, the TEI coordinates have to be generated/updated
+							updateTEIcoordinates(teiId);
+						}
+				}
+				
+			/*function to generate unique ids for the elements in the tree*/
+			function guid() {
+				function s4() {
+				return Math.floor((1 + Math.random()) * 0x10000)
+					.toString(16)
+					.substring(1);
+				}
+				var testId = s4() + s4() + '-' + s4() + s4();
+				return testId;
+				}
