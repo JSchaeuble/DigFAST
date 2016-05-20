@@ -1,10 +1,9 @@
-var currentText;
 var lastMovedId;
 
 var svgCanvas = document.querySelector('#myCanvas'),
     svgNS = 'http://www.w3.org/2000/svg',
     rectangles = [];
-    //teiNS='http://www.tei-c.org/ns/1.0';
+	
 var parentgroup = document.createElementNS(svgNS, 'g');
 	parentgroup.setAttribute('id','scalingParent');
 	svgCanvas.appendChild(parentgroup);
@@ -410,8 +409,6 @@ function isLocked(myid){
 }
 
 /*function to be called when a new TEI file has been selected. Calls functions to check the TEI file and (in case its valid for our needs) processes it)*/
-var TEIparsed;
-
 function processTEIfile(evt) {
     //Retrieve the first (and only!) File from the FileList object
     var f = evt.target.files[0]; 
@@ -423,7 +420,7 @@ function processTEIfile(evt) {
       r.onload = function(e) { 
 	     TEIcontents = e.target.result;
         var xmlDoc = $.parseXML( TEIcontents );
-  			TEIparsed = $( xmlDoc );
+  		var TEIparsed = $( xmlDoc );
   			//if root element is TEI, to be replaced by if "isUsableTEI(xmlDoc)", TODO: write "isUsableTEI()"
   			if(xmlDoc.documentElement.tagName=='TEI'){
 				//TODO: check if image-links (one or more!) are given in the TEI, if so, check if image can be found on filesystem (can only be loaded on server system)
@@ -477,7 +474,6 @@ function onSVGdownload() {
 
 
 function onTEIdownload() {
-	//var root = TEIparsed.find("TEI").get(0);
 	var serializer = new XMLSerializer(); 
 	
 	//jQuery.merge() for deep copy! otherwise ids are removed in working instance as well
@@ -492,12 +488,12 @@ function onTEIdownload() {
     downloadLink.download = fileNameToSaveAs;
     downloadLink.innerHTML = "Download File";
     
-        // Firefox requires the link to be added to the DOM
-        // before it can be clicked.
-        downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-        //downloadLink.onclick = destroyClickedElement;
-        downloadLink.style.display = "none";
-        document.body.appendChild(downloadLink);
+	// Firefox requires the link to be added to the DOM
+	// before it can be clicked.
+	downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+	//downloadLink.onclick = destroyClickedElement;
+	downloadLink.style.display = "none";
+	document.body.appendChild(downloadLink);
   
     downloadLink.click();
 
@@ -546,8 +542,13 @@ function startWithImage(){
 			
 			
 function addTeiElement(elementName,parentId,lastOrAfter,elId){
+	//if no elId is given a unique one is produced
 	if(elId === undefined || elId==''){
-		var realId=elementName+'_'+guid();
+		//the uniqueId for change elements is shorter (because they're part of the actual TEI)
+		if(elementName=="change"){
+			var realId=elementName+'_'+shortGuid();
+		}else{
+			var realId=elementName+'_'+guid();}
 	}else{
 		var realId=elId;
 	}
@@ -566,8 +567,10 @@ function addTeiElement(elementName,parentId,lastOrAfter,elId){
 		else{
 			teiDoc.getElementById(parentId).parentNode.insertBefore(teiElement,teiDoc.getElementById(parentId).nextSibling);}
 	}
+	//whenever a listChange is produced, it also gets a change child, listChange without children is not valid...
+	//TODO: maybe change that... in other instances it cannot be prohibited, that users produce invalid tei either
 	if(elementName=="listChange"){
-		addTeiElement('change',realId,'last','change_'+shortGuid());
+		addTeiElement('change',realId,'last','');
 	}
 }
 			
@@ -576,7 +579,12 @@ function addTeiElement(elementName,parentId,lastOrAfter,elId){
 function createTeiElement(elName,elfId){
 		var myElement = document.createElementNS('http://www.tei-c.org/ns/1.0',elName);
 		if(elfId){
-		myElement.setAttribute('id',elfId);}
+		myElement.setAttribute('id',elfId);
+			//change elements get a xml:id as default (otherwise they can't be linked to)
+			if(elName=="change"){
+				myElement.setAttribute('xml:id',elfId);
+			}
+		}
 		return (myElement);
 }
 			
@@ -775,7 +783,10 @@ function makeButtons(elId,allowedInside,allowedAfter){
 }
 			
 function generateNode(where,parentNodeId,nodeType){
-	var teiId=nodeType+'_'+guid();
+	if(nodeType=="change"){
+		var teiId=nodeType+'_'+shortGuid();
+	}else{
+		var teiId=nodeType+'_'+guid();}
 	var parentTeiNodeId= parentNodeId.replace('_jstree','');
 	var rectId=teiId+'_jstree';
 	addTeiElement(nodeType,parentTeiNodeId,where,teiId);
@@ -800,9 +811,9 @@ function guid() {
 }
 /*produce a shorter Guid*/
 function shortGuid(){
-	var a= guid().substr(0, 3);
+	var a= guid().substr(0, 4);
 	while(teiDoc.getElementById(a)){
-		a= guid().substr(0, 3);
+		a= guid().substr(0, 4);
 	}
 	return a;
 }
