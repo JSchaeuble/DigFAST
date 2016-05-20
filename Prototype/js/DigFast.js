@@ -6,8 +6,8 @@ var svgCanvas = document.querySelector('#myCanvas'),
     rectangles = [];
     //teiNS='http://www.tei-c.org/ns/1.0';
 var parentgroup = document.createElementNS(svgNS, 'g');
-	 parentgroup.setAttribute('id','scalingParent');
-	 svgCanvas.appendChild(parentgroup);
+	parentgroup.setAttribute('id','scalingParent');
+	svgCanvas.appendChild(parentgroup);
  
 var TEIcontents;
 
@@ -62,19 +62,18 @@ Rectangle.prototype.draw = function () {
 		if (parZone) {
 			this.myg.setAttribute('transform','rotate('+parZone.getAttribute('rotate')+','+this.x+','+this.y+')');
 			//alert(parZone.getAttribute('rotate'));
-			}
-	}else{
-	this.myg.setAttribute('transform','rotate('+this.rotAngle+','+this.x+','+this.y+')');}
-  this.el.setAttribute('x', this.x);
-  this.el.setAttribute('y', this.y);
-  this.el.setAttribute('width' , this.w);
-  this.el.setAttribute('height', this.h);
-  this.el.setAttribute('stroke-width', this.stroke);
-  this.el.setAttribute('rx', 5);
-  this.el.setAttribute('ry', 5);
-  
-  this.texti.setAttribute('x', 0);//+10);
-  this.texti.setAttribute('y', -2.5);//+20);
+		}
+	}else{this.myg.setAttribute('transform','rotate('+this.rotAngle+','+this.x+','+this.y+')');}
+	
+	this.el.setAttribute('x', this.x);
+	this.el.setAttribute('y', this.y);
+	this.el.setAttribute('width' , this.w);
+	this.el.setAttribute('height', this.h);
+	this.el.setAttribute('stroke-width', this.stroke);
+	this.el.setAttribute('rx', 5);
+	this.el.setAttribute('ry', 5);
+	this.texti.setAttribute('x', 0);//+10);
+	this.texti.setAttribute('y', -2.5);//+20);
   
   //set the rectangle active if it has already been appended (otherwise its the first draw)
   if(document.getElementById(this.myId)){
@@ -241,7 +240,10 @@ function getTeiText(treeId){
 function addProfileDesc(){
 			$('#dia_stage').hide();
 			addTeiElement('profileDesc','teiHeader','last','profileDesc');
-				addTeiElement('creation','profileDesc','last','creation');
+			addTeiElement('creation','profileDesc','last','creation');
+			$('#html1').jstree('deselect_all');
+			$('#html1').jstree('select_node',"creation_jstree");
+			$("#html1").jstree("open_node", "creation_jstree");
 }
 
 
@@ -249,9 +251,6 @@ function addProfileDesc(){
 function addImageToSVG(event){
   var selectedFile = event.target.files[0];
   var reader = new FileReader();
-
-  var imgtag = document.getElementById("myimage");
-	  imgtag.title = selectedFile.name;
   
   var svgtag = document.getElementById("myCanvas");
   //everything that has to be processed after the file has been loaded goes into here:
@@ -262,9 +261,7 @@ function addImageToSVG(event){
   	 image.onload = function(){
   	 	//put image on screen
   	 	//set image size, question: should this size be taken from the TEI or from the image? scaling?
-		imgtag.width = this.width;
-		imgtag.height = this.height;
-		$(svgtag).attr("viewBox","0 0 "+imgtag.width +" "+imgtag.height);
+		$(svgtag).attr("viewBox","0 0 "+this.width +" "+this.height);
   	 	$(svgtag).attr({width:this.width,height:this.height});
 		var imLink = image.src;
 		var svgimg = document.createElementNS(svgNS, 'image');
@@ -288,9 +285,6 @@ function addImageToSVG(event){
 function processImageFile(event) {
   var selectedFile = event.target.files[0];
   var reader = new FileReader();
-
-  var imgtag = document.getElementById("myimage");
-  imgtag.title = selectedFile.name;
   
   var svgtag = document.getElementById("myCanvas");
   //everything that has to be processed after the file has been loaded goes into here:
@@ -300,11 +294,8 @@ function processImageFile(event) {
   	 image.src=event.target.result;
   	 image.onload = function(){
   	 	//put image on screen
-  	 	imgtag.src = image.src;
   	 	//set image size, question: should this size be taken from the TEI or from the image? scaling?
-  	 	imgtag.width = this.width;
-  	 	imgtag.height = this.height;
-		$(svgtag).attr("viewBox","0 0 "+imgtag.width +" "+imgtag.height);
+		$(svgtag).attr("viewBox","0 0 "+this.width +" "+this.height);
   	 	$(svgtag).attr({width:this.width,height:this.height});
   	 	
   	 	//set global origHeight and origSize for Scaling Functions
@@ -326,7 +317,6 @@ function updateTEIcoordinates(passedId){
 		 lrx=ulx+parseInt($('#'+zoneId).find('rect').attr("width")),
 		 lry=uly+parseInt($('#'+zoneId).find('rect').attr("height"));
 		 
-
 		 $(teiDoc).find('#'+passedId).attr({
 		 'ulx':ulx,
 		 'uly':uly,
@@ -356,7 +346,6 @@ function placeTEIrects(){
 			
 			var myheight= parseInt($(this).attr("lry"))-myY;
 			var mywidth = parseInt($(this).attr("lrx"))-myX;
-			
 			
 			//if zone has a rotation attribute set them
 			var rotAngle=parseInt(ghf0);
@@ -440,9 +429,7 @@ function processTEIfile(evt) {
 				//TODO: check if image-links (one or more!) are given in the TEI, if so, check if image can be found on filesystem (can only be loaded on server system)
 				$('#teiSelection').css("display",'none');
 				$('#imageSelection').css('display','inline');
-  				
 				var link=TEIparsed.find('graphic').attr("url");
-
   			}else{
       	alert("This is not a TEI File. Please select another file." + xmlDoc.documentElement.tagName);}
       
@@ -451,7 +438,7 @@ function processTEIfile(evt) {
     } else { 
       alert("Failed to load file");
     }
-  }
+}
 
 
 //adds the CSS information to style the rectangles to the SVG file
@@ -462,10 +449,11 @@ function addCSStoSVG(){
 		 styleElement.innerHTML="rect{fill:grey;fill-opacity: 0.2;stroke:#8AC007;stroke-opacity:1;}";		 
 		 defsElement.appendChild(styleElement);
 		 svgCanvas.insertBefore(defsElement,svgCanvas.firstChild);
-	}
+}
 
 
 /*function to download the svg file at any point. The same function could probably be used to download the TEI file at any stage. TODO: adjust it by using parameters!*/
+/*TODO: function is not called tested in this betaversion, adjust it! (taken from previous experiments)*/
 function onSVGdownload() {
 	 addCSStoSVG();
 	 imageScale(0);
@@ -477,14 +465,13 @@ function onSVGdownload() {
     downloadLink.download = fileNameToSaveAs;
     downloadLink.innerHTML = "Download File";
    
-        // Firefox requires the link to be added to the DOM
-        // before it can be clicked.
-        downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-        //downloadLink.onclick = destroyClickedElement;
-        downloadLink.style.display = "none";
-        document.body.appendChild(downloadLink);
+	// Firefox requires the link to be added to the DOM
+	// before it can be clicked.
+	downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+	//downloadLink.onclick = destroyClickedElement;
+	downloadLink.style.display = "none";
+	document.body.appendChild(downloadLink);
    
-
     downloadLink.click();
 }
 
@@ -525,7 +512,6 @@ a factor of -1 will scale the image 90% of its previous size
 a factor of 0 will reset the image to the Original Size
 */
 function scaleCanvas(factor){
-	var imgtag = document.getElementById("myimage");
 	if(factor==0){
 		scalingFactor= 1.0;
 	}else{
@@ -543,272 +529,280 @@ function setSvgScale() {
 function startWithoutImage(){
 				createDefaultJstree();
 				$('#beginnButtons').hide();
-			};
+};
 			
 			var teiDoc = document.implementation.createDocument("http://www.tei-c.org/ns/1.0", "TEI", null);
 			
-			function startWithImage(){
-				createDefaultJstree();
-				$('#imgFile').trigger('click');
-				$('#beginnButtons').hide();
-				$('#trulala').show();
-				$("#html1").jstree('create_node', 'sourceDoc_1_jstree', { id:'graphic_1_jstree', text:"&lt;graphic&gt;"}, 'last');
-				$('#html1').jstree('select_node','sourceDoc_1_jstree');
-				$('.after_start').removeClass('hidden');
-				$('.before_start').addClass('hidden');
-			};
+function startWithImage(){
+	createDefaultJstree();
+	$('#imgFile').trigger('click');
+	$('#beginnButtons').hide();
+	$('#trulala').show();
+	$("#html1").jstree('create_node', 'sourceDoc_1_jstree', { id:'graphic_1_jstree', text:"&lt;graphic&gt;"}, 'last');
+	$('#html1').jstree('select_node','sourceDoc_1_jstree');
+	$('.after_start').removeClass('hidden');
+	$('.before_start').addClass('hidden');
+};
 			
 			
-			function addTeiElement(elementName,parentId,lastOrAfter,elId){
-				if(elId === undefined || elId==''){
-					var realId=elementName+'_'+guid();
+function addTeiElement(elementName,parentId,lastOrAfter,elId){
+	if(elId === undefined || elId==''){
+		var realId=elementName+'_'+guid();
+	}else{
+		var realId=elId;
+	}
+	var jsTreeId=realId+'_jstree';
+	var teiElement = createTeiElement(elementName,realId);
+	
+	//if no parentId is given, the element is added to the root element
+	if(parentId =="" || parentId===undefined || parentId==null){
+		teiDoc.documentElement.appendChild(teiElement);
+		$("#html1").jstree('create_node', 'tei_jstree', { id:jsTreeId, text:"&lt;"+elementName+"&gt;"}, 'last');
+	//else the element is added to the given parentId (either last inside oder "after" as a sibbling)
+	} else{
+		$("#html1").jstree('create_node', parentId+'_jstree', { id:jsTreeId, text:"&lt;"+elementName+"&gt;"}, lastOrAfter);
+		if(lastOrAfter=="last"){
+			teiDoc.getElementById(parentId).appendChild(teiElement);}
+		else{
+			teiDoc.getElementById(parentId).parentNode.insertBefore(teiElement,teiDoc.getElementById(parentId).nextSibling);}
+	}
+	if(elementName=="listChange"){
+		addTeiElement('change',realId,'last','change_'+shortGuid());
+	}
+}
+			
+			
+			
+function createTeiElement(elName,elfId){
+		var myElement = document.createElementNS('http://www.tei-c.org/ns/1.0',elName);
+		if(elfId){
+		myElement.setAttribute('id',elfId);}
+		return (myElement);
+}
+			
+			
+			
+function createDefaultJstree(){
+		$("#html1").jstree('create_node', '#', { id:'tei_jstree', text:"&lt;TEI&gt;"}, 'inside');
+			addTeiElement('teiHeader','','last','teiHeader');
+				addTeiElement('fileDesc','teiHeader','last','fileDesc');
+					addTeiElement('titleStmt','fileDesc','last','titleStmt');
+						addTeiElement('title','titleStmt','last','title_1');
+					addTeiElement('publicationStmt','fileDesc','last','publicationStmt');			
+						addTeiElement('p','publicationStmt','last','');
+					addTeiElement('sourceDesc','fileDesc','last','sourceDesc');
+						addTeiElement('p','sourceDesc','last','');
+			addTeiElement('sourceDoc','','last','sourceDoc_1');
+			
+			
+		$("#html1").on('select_node.jstree', function (e,data){
+				var selectedA = $("#html1").jstree().get_selected();
+				showElementOptions(selectedA);
+				/*when node is selected, but there is no corresponding rectangle, the last activated rectangle get deactivated, otherwise the corresponding rectangle will be activated*/
+				if(document.getElementById(selectedA[0].replace('_jstree','_rect'))){
+					activateRectangle(selectedA[0].replace('_jstree',''));}else if (document.getElementById(lastMovedId)){
+					deactivateRectangle();
+				}
+				if(selectedA[0].indexOf('zone')>-1){
+					$('#rotation_area').show();
 				}else{
-					var realId=elId;
+					$('#rotation_area').hide();
 				}
-				var jsTreeId=realId+'_jstree';
-				var teiElement = createTeiElement(elementName,realId);
+		}).jstree();
+		
+}
+			
+			
+function showElementOptions(treeId){
+	$('.optionIcons').remove();
+	var fullId=treeId[0];
+	var positionString = (fullId+'_anchor');
+	//TODO: maybe the elementName should not be retrieved via id conventions?
+	var teiElementName= fullId.split('_')[0];
+	var allowedInside=[], allowedAfter =[], allowedAttributes=[];
+	if(teiElementName == 'sourceDoc'){
+		allowedInside = ['graphic','surface','surfaceGrp'];
+		//allowedAfter =['sourceDoc','text'];
+	}else if(teiElementName =='surface'){
+		allowedInside = ['zone','line','graphic','surface','surfaceGrp'];
+		allowedAfter =['surface','surfaceGrp'];
+	}else if(teiElementName =='surfaceGrp'){
+		allowedInside = ['surface','surfaceGrp'];
+		allowedAfter =['surface','surfaceGrp'];
+	} else if(teiElementName =="zone"){
+		allowedInside = ['line','zone','graphic','surface','add','del'];
+		allowedAfter =['line','zone','graphic','surface'];
+	} else if(teiElementName =="line"){
+		allowedInside = ['line','zone','add','del'];
+		allowedAfter =['line','zone','graphic','surface'];
+	} else if(teiElementName =="creation"){
+		allowedInside = ['listChange'];
+	} else if(teiElementName =="listChange"){
+		allowedInside = ['listChange','change'];
+		allowedAfter =['listChange'];
+	} else if (teiElementName =="change"){
+		allowedAfter = ['listChange','change'];
+	}
+	
+	var buttonGroup = makeButtons(fullId, allowedInside,allowedAfter);
+	$(document.getElementById(positionString)).after(buttonGroup);
+}
+			
+function makeButtons(elId,allowedInside,allowedAfter){
+	var parentDiv = document.createElement("div");
+		$(parentDiv).attr({
+		"class":"btn-group optionIcons",
+		"role":"group",
+		"aria-label":"...",
+		"style":"display: inline; margin-left: 5px"
+		});
+		
+	//p and title elements get a textfield, but are not in any way connected to the canvas
+	if(elId.indexOf('p_')==0 || elId.indexOf('title_')==0 || elId.indexOf('change_')==0){
+		var oldtext=getTeiText(elId);
+		var myInput = document.createElement("input");
+			$(myInput).attr({
+				"type":"text",
+				"value":oldtext,
+				"class":"text-input",
+				});
+		parentDiv.appendChild(myInput);
+		$(myInput).keyup(function(){
+				//update Text on TEI in background
+				setTeiText(elId,$(myInput).val());
+				} );
+	}
+	//If its a zone or a line: add the textfield for Transcript
+	if( (elId.indexOf('zone') > -1) || (elId.indexOf('line') > -1) ){
+		var oldtext = getRectText(elId);
+		var myInput = document.createElement("input");
+			$(myInput).attr({
+				"type":"text",
+				"value":oldtext,
+				"class":"text-input",
+				});
+		parentDiv.appendChild(myInput);
+		$(myInput).keyup(function(){
+				//update Text on rectangle and on TEI in background
+				setRectText(elId, $(myInput).val());
+				setTeiText(elId,$(myInput).val());
+				} );
+	}
+	
+	/*Add Inside Button*/
+	if(allowedInside.length>0){
+		var myDiv = document.createElement("div");
+		$(myDiv).attr({
+		"class":"dropdown",
+		"style":"display: inline; margin-left: 5px"
+		});
+		var myButton = document.createElement("button");	
+			$(myButton).attr({
+				"class": "btn btn-default btn-xs dropdown-toggle",
+				"type": "button",
+				"id" : "btn_allowedInside",
+				"data-toggle":"dropdown",
+				"aria-haspopup":"true", 
+				"aria-expanded":"false"
+			});
+		var t = document.createTextNode("add Inside");   
+		var myCaret = document.createElement("span");
+			$(myCaret).attr("class","caret");
+		myButton.appendChild(t);
+		myButton.appendChild(myCaret);
+		myDiv.appendChild(myButton);
+		var myUl=document.createElement("ul");
+			$(myUl).attr({
+				"class":"dropdown-menu",
+				"aria-labelledby": "btn_allowedInside"
+			});
+		for (item in allowedInside){
+			var myLi = document.createElement("li");
+			var myLink = document.createElement("a");
+				$(myLink).attr({
+					"href":"#",
+					"onClick":"generateNode('last','"+elId+"','"+allowedInside[item]+"')"
+				});
+				myLink.appendChild(document.createTextNode(allowedInside[item]));
+			myLi.appendChild(myLink);
+			myUl.appendChild(myLi);
+		}
+		myDiv.appendChild(myUl);
+		parentDiv.appendChild(myDiv);
+	}
+	/*Add After Button*/
+	if(allowedAfter.length>0){
+		var myDiv2 = document.createElement("div");
+		$(myDiv2).attr({
+		"class":"dropdown",
+		"style":"display: inline; margin-left: 5px"
+		});
+		var myButton2 = document.createElement("button");	
+			$(myButton2).attr({
+				"class": "btn btn-default btn-xs dropdown-toggle",
+				"type": "button",
+				"id" : "btn_allowedAfter",
+				"data-toggle":"dropdown",
+				"aria-haspopup":"true", 
+				"aria-expanded":"false"
+			});
+		var t2 = document.createTextNode("add After");   
+		var myCaret2 = document.createElement("span");
+			$(myCaret2).attr("class","caret");
+		myButton2.appendChild(t2);
+		myButton2.appendChild(myCaret2);
+		myDiv2.appendChild(myButton2);
+		var myUl2=document.createElement("ul");
+			$(myUl2).attr({
+				"class":"dropdown-menu",
+				"aria-labelledby": "btn_allowedAfter"
+			});
+		for (item2 in allowedAfter){
+			var myLi2 = document.createElement("li");
+			var myLink2 = document.createElement("a");
+				$(myLink2).attr({
+					"href":"#",
+					"onClick":"generateNode('after','"+elId+"','"+allowedAfter[item2]+"')"
+				});
+				myLink2.appendChild(document.createTextNode(allowedAfter[item2]));
+			myLi2.appendChild(myLink2);
+			myUl2.appendChild(myLi2);
+		}
+		myDiv2.appendChild(myUl2);
+		parentDiv.appendChild(myDiv2);
+	}
+	return (parentDiv);
+}
+			
+function generateNode(where,parentNodeId,nodeType){
+	var teiId=nodeType+'_'+guid();
+	var parentTeiNodeId= parentNodeId.replace('_jstree','');
+	var rectId=teiId+'_jstree';
+	addTeiElement(nodeType,parentTeiNodeId,where,teiId);
+	
+	if(nodeType=='surface' | nodeType=='zone' | nodeType=='line'){
+		//here the default dimensions have to be adjusted and selected smarter
+		new Rectangle (0, 0, 400, 100, svgCanvas, rectId, nodeType, 0);
+		//whenever a rect is painted, the TEI coordinates have to be generated/updated
+		updateTEIcoordinates(teiId);
+	}
+}
 				
-				//if no parentId is given, the element is added to the root element
-				if(parentId =="" || parentId===undefined || parentId==null){
-					teiDoc.documentElement.appendChild(teiElement);
-					$("#html1").jstree('create_node', 'tei_jstree', { id:jsTreeId, text:"&lt;"+elementName+"&gt;"}, 'last');
-				//else the element is added to the given parentId (either last inside oder "after" as a sibbling)
-				} else{
-					$("#html1").jstree('create_node', parentId+'_jstree', { id:jsTreeId, text:"&lt;"+elementName+"&gt;"}, lastOrAfter);
-					if(lastOrAfter=="last"){
-						teiDoc.getElementById(parentId).appendChild(teiElement);}
-					else{
-						teiDoc.getElementById(parentId).parentNode.insertBefore(teiElement,teiDoc.getElementById(parentId).nextSibling);}
-				}
-			}
-			
-			
-			
-			function createTeiElement(elName,elfId){
-					var myElement = document.createElementNS('http://www.tei-c.org/ns/1.0',elName);
-					if(elfId){
-					myElement.setAttribute('id',elfId);}
-					return (myElement);
-			}
-			
-			
-			
-			function createDefaultJstree(){
-					$("#html1").jstree('create_node', '#', { id:'tei_jstree', text:"&lt;TEI&gt;"}, 'inside');
-						addTeiElement('teiHeader','','last','teiHeader');
-							addTeiElement('fileDesc','teiHeader','last','fileDesc');
-								addTeiElement('titleStmt','fileDesc','last','titleStmt');
-									addTeiElement('title','titleStmt','last','title_1');
-								addTeiElement('publicationStmt','fileDesc','last','publicationStmt');			
-									addTeiElement('p','publicationStmt','last','');
-								addTeiElement('sourceDesc','fileDesc','last','sourceDesc');
-									addTeiElement('p','sourceDesc','last','');
-						addTeiElement('sourceDoc','','last','sourceDoc_1');
-						
-						
-					$("#html1").on('select_node.jstree', function (e,data){
-							var selectedA = $("#html1").jstree().get_selected();
-							showElementOptions(selectedA);
-							/*when node is selected, but there is no corresponding rectangle, the last activated rectangle get deactivated, otherwise the corresponding rectangle will be activated*/
-							if(document.getElementById(selectedA[0].replace('_jstree','_rect'))){
-								activateRectangle(selectedA[0].replace('_jstree',''));}else if (document.getElementById(lastMovedId)){
-								deactivateRectangle();
-							}
-							if(selectedA[0].indexOf('zone')>-1){
-								$('#rotation_area').show();
-							}else{
-								$('#rotation_area').hide();
-							}
-					}).jstree();
-					
-			}
-			
-			
-			function showElementOptions(treeId){
-				$('.optionIcons').remove();
-				var fullId=treeId[0];
-				var positionString = (fullId+'_anchor');
-				//TODO: maybe the elementName should not be retrieved via id conventions?
-				var teiElementName= fullId.split('_')[0];
-				var allowedInside=[], allowedAfter =[], allowedAttributes=[];
-				if(teiElementName == 'sourceDoc'){
-					allowedInside = ['graphic','surface','surfaceGrp'];
-					//allowedAfter =['sourceDoc','text'];
-				}else if(teiElementName =='surface'){
-					allowedInside = ['zone','line','graphic','surface','surfaceGrp'];
-					allowedAfter =['surface','surfaceGrp'];
-				}else if(teiElementName =='surfaceGrp'){
-					allowedInside = ['surface','surfaceGrp'];
-					allowedAfter =['surface','surfaceGrp'];
-				} else if(teiElementName =="zone"){
-					allowedInside = ['line','zone','graphic','surface','add','del'];
-					allowedAfter =['line','zone','graphic','surface'];
-				} else if(teiElementName =="line"){
-					allowedInside = ['line','zone','add','del'];
-					allowedAfter =['line','zone','graphic','surface'];
-				} else if(teiElementName =="creation"){
-					allowedInside = ['listChange'];
-				} else if(teiElementName =="listChange"){
-					allowedInside = ['listChange','change'];
-					allowedAfter =['listChange'];
-				} else if (teiElementName =="change"){
-					allowedAfter = ['listChange','change'];
-				}
-				
-				var buttonGroup = makeButtons(fullId, allowedInside,allowedAfter);
-				$(document.getElementById(positionString)).after(buttonGroup);
-			}
-			
-			function makeButtons(elId,allowedInside,allowedAfter){
-				var parentDiv = document.createElement("div");
-					$(parentDiv).attr({
-					"class":"btn-group optionIcons",
-					"role":"group",
-					"aria-label":"...",
-					"style":"display: inline; margin-left: 5px"
-					});
-					
-				//p and title elements get a textfield, but are not in any way connected to the canvas
-				if(elId.indexOf('p_')==0 || elId.indexOf('title_')==0 || elId.indexOf('change_')==0){
-					var oldtext=getTeiText(elId);
-					var myInput = document.createElement("input");
-						$(myInput).attr({
-							"type":"text",
-							"value":oldtext,
-							"class":"text-input",
-							});
-					parentDiv.appendChild(myInput);
-					$(myInput).keyup(function(){
-							//update Text on TEI in background
-							setTeiText(elId,$(myInput).val());
-							} );
-				}
-				//If its a zone or a line: add the textfield for Transcript
-				if( (elId.indexOf('zone') > -1) || (elId.indexOf('line') > -1) ){
-					var oldtext = getRectText(elId);
-					var myInput = document.createElement("input");
-						$(myInput).attr({
-							"type":"text",
-							"value":oldtext,
-							"class":"text-input",
-							});
-					parentDiv.appendChild(myInput);
-					$(myInput).keyup(function(){
-							//update Text on rectangle and on TEI in background
-							setRectText(elId, $(myInput).val());
-							setTeiText(elId,$(myInput).val());
-							} );
-				}
-				
-				/*Add Inside Button*/
-				if(allowedInside.length>0){
-					var myDiv = document.createElement("div");
-					$(myDiv).attr({
-					"class":"dropdown",
-					"style":"display: inline; margin-left: 5px"
-					});
-					var myButton = document.createElement("button");	
-						$(myButton).attr({
-							"class": "btn btn-default btn-xs dropdown-toggle",
-							"type": "button",
-							"id" : "btn_allowedInside",
-							"data-toggle":"dropdown",
-							"aria-haspopup":"true", 
-							"aria-expanded":"false"
-						});
-					var t = document.createTextNode("add Inside");   
-					var myCaret = document.createElement("span");
-						$(myCaret).attr("class","caret");
-					myButton.appendChild(t);
-					myButton.appendChild(myCaret);
-					myDiv.appendChild(myButton);
-					var myUl=document.createElement("ul");
-						$(myUl).attr({
-							"class":"dropdown-menu",
-							"aria-labelledby": "btn_allowedInside"
-						});
-					for (item in allowedInside){
-						var myLi = document.createElement("li");
-						var myLink = document.createElement("a");
-							$(myLink).attr({
-								"href":"#",
-								"onClick":"generateNode('last','"+elId+"','"+allowedInside[item]+"')"
-							});
-							myLink.appendChild(document.createTextNode(allowedInside[item]));
-						myLi.appendChild(myLink);
-						myUl.appendChild(myLi);
-					}
-					myDiv.appendChild(myUl);
-					parentDiv.appendChild(myDiv);
-				}
-				/*Add After Button*/
-				if(allowedAfter.length>0){
-					var myDiv2 = document.createElement("div");
-					$(myDiv2).attr({
-					"class":"dropdown",
-					"style":"display: inline; margin-left: 5px"
-					});
-					var myButton2 = document.createElement("button");	
-						$(myButton2).attr({
-							"class": "btn btn-default btn-xs dropdown-toggle",
-							"type": "button",
-							"id" : "btn_allowedAfter",
-							"data-toggle":"dropdown",
-							"aria-haspopup":"true", 
-							"aria-expanded":"false"
-						});
-					var t2 = document.createTextNode("add After");   
-					var myCaret2 = document.createElement("span");
-						$(myCaret2).attr("class","caret");
-					myButton2.appendChild(t2);
-					myButton2.appendChild(myCaret2);
-					myDiv2.appendChild(myButton2);
-					var myUl2=document.createElement("ul");
-						$(myUl2).attr({
-							"class":"dropdown-menu",
-							"aria-labelledby": "btn_allowedAfter"
-						});
-					for (item2 in allowedAfter){
-						var myLi2 = document.createElement("li");
-						var myLink2 = document.createElement("a");
-							$(myLink2).attr({
-								"href":"#",
-								"onClick":"generateNode('after','"+elId+"','"+allowedAfter[item2]+"')"
-							});
-							myLink2.appendChild(document.createTextNode(allowedAfter[item2]));
-						myLi2.appendChild(myLink2);
-						myUl2.appendChild(myLi2);
-					}
-					myDiv2.appendChild(myUl2);
-					parentDiv.appendChild(myDiv2);
-				}
-				
-				
-				
-				return (parentDiv);
-			}
-			
-			function generateNode(where,parentNodeId,nodeType){
-						var teiId=nodeType+'_'+guid();
-						var parentTeiNodeId= parentNodeId.replace('_jstree','');
-						var rectId=teiId+'_jstree';
-						addTeiElement(nodeType,parentTeiNodeId,where,teiId);
-						
-						if(nodeType=='surface' | nodeType=='zone' | nodeType=='line'){
-							//here the default dimensions have to be adjusted and selected smarter
-							new Rectangle (0, 0, 400, 100, svgCanvas, rectId, nodeType, 0);
-							//whenever a rect is painted, the TEI coordinates have to be generated/updated
-							updateTEIcoordinates(teiId);
-						}
-				}
-				
-			/*function to generate unique ids for the elements in the tree*/
-			function guid() {
-				function s4() {
-				return Math.floor((1 + Math.random()) * 0x10000)
-					.toString(16)
-					.substring(1);
-				}
-				var testId = s4() + s4() + '-' + s4() + s4();
-				return testId;
-				}
+/*function to generate unique ids for the elements in the tree*/
+function guid() {
+	function s4() {
+	return Math.floor((1 + Math.random()) * 0x10000)
+		.toString(16)
+		.substring(1);
+	}
+	var testId = s4() + s4() + '-' + s4() + s4();
+	return testId;
+}
+/*produce a shorter Guid*/
+function shortGuid(){
+	var a= guid().substr(0, 3);
+	while(teiDoc.getElementById(a)){
+		a= guid().substr(0, 3);
+	}
+	return a;
+}
