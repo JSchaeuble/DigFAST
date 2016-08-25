@@ -21,7 +21,7 @@
 	position: absolute;
 	margin: auto;
 	left: 30px;
-	top: -12px;
+	top: -22px;
 	z-index: 1;
 }
 
@@ -35,7 +35,7 @@
 	padding: 5px;
 	margin-left:10px;
 	margin-bottom:30px;
-	resize: horizontal;
+	resize: both;
     overflow: auto;
 	
 	/*border + shadow around the SVG-Area*/
@@ -45,17 +45,20 @@
 	box-shadow: 10px 10px 5px 0px rgba(204,204,204,1);
 }
 
+
 #text_area {
 	float: left;
     margin-left: 20px; /*700svg_area.width+10svg_area.margin+10distance*/
-    height: 200px;
+	overflow: auto;
+	height: 100%;
+	resize: both;
     background: white;
 	padding: 25px;
 	width: 400px;
 }
 
 .text-input {
-	width: 100%;
+	width: 100px;
     padding-left: 10px;
 	padding-right: 10px;
     margin: 0px;

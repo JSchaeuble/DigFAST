@@ -793,7 +793,14 @@ function generateNode(where,parentNodeId,nodeType){
 	
 	if(nodeType=='surface' | nodeType=='zone' | nodeType=='line'){
 		//here the default dimensions have to be adjusted and selected smarter
-		new Rectangle (0, 0, 400, 100, svgCanvas, rectId, nodeType, 0);
+		var defaultWidth=400;
+		var defaultHeight=150;
+		if(origWidth>100){defaultWidth=0.5*origWidth;}
+		//mark startposition depend on scrolling?
+		var startX = 0.1*$('#svg_area').width();
+		var startY = (topScroll/scalingFactor)+($('#svg_area').height()/2);
+		//alert($('#trulala').offset().top);
+		new Rectangle (startX, startY, defaultWidth, 100, svgCanvas, rectId, nodeType, 0);
 		//whenever a rect is painted, the TEI coordinates have to be generated/updated
 		updateTEIcoordinates(teiId);
 	}
@@ -817,3 +824,68 @@ function shortGuid(){
 	}
 	return a;
 }
+
+function makeTextstageModal(){
+	var list = $('#textStagesList');
+	var stages = teiDoc.getElementById('creation').querySelectorAll('creation > listChange');
+	for (item in stages){
+		list.appendChild(makeStageitemNode(item));
+	}
+	alert(stages.length);
+}
+
+function makeStageitemNode(myItem){
+	var resultingItem;
+	if (myItem.name=="listChange"){
+		
+	}
+	else if(myItem.name=="change"){
+		
+	}
+	var children = myItem.childNodes;
+	for (item2 in children){
+		resultingItem.appendChild(makeStageitemNode(item2));
+	}
+	
+}
+
+
+
+
+
+
+
+jQuery.event.special.scrolldelta = {
+    // from http://learn.jquery.com/events/event-extensions/
+    delegateType: "scroll",
+    bindType: "scroll",
+    handle: function (event) {
+        var handleObj = event.handleObj;
+        var targetData = jQuery.data(event.target);
+        var ret = null;
+        var elem = event.target;
+        var isDoc = elem === document;
+        var oldTop = targetData.top || 0;
+        var oldLeft = targetData.left || 0;
+        targetData.top = isDoc ? elem.documentElement.scrollTop + elem.body.scrollTop : elem.scrollTop;
+        targetData.left = isDoc ? elem.documentElement.scrollLeft + elem.body.scrollLeft : elem.scrollLeft;
+        event.scrollTopDelta = targetData.top - oldTop;
+        event.scrollTop = targetData.top;
+        event.scrollLeftDelta = targetData.left - oldLeft;
+        event.scrollLeft = targetData.left;
+        event.type = handleObj.origType;
+        ret = handleObj.handler.apply(this, arguments);
+        event.type = handleObj.type;
+        return ret;
+    }
+};
+
+var topScroll =0;
+$('#svg_area').on('scrolldelta', function (e) {
+    topScroll = e.scrollTop;
+    var topDelta = e.scrollTopDelta;
+    var left = e.scrollLeft;
+    var leftDelta = e.scrollLeftDelta;
+    var feedbackText = 'scrollTop: ' + topScroll.toString() + 'px (' + (topDelta >= 0 ? '+' : '') + topDelta.toString() + 'px), scrollLeft: ' + left.toString() + 'px (' + (leftDelta >= 0 ? '+' : '') + leftDelta.toString() + 'px)';
+   console.log(feedbackText);
+});

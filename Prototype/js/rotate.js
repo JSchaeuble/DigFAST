@@ -4,13 +4,13 @@ var timeout, rotation_aclockwise=$('#rot_left'), rotation_clockwise=$('#rot_righ
 rotation_aclockwise.mousedown(function(){
     timeout = setInterval(function(){
         rotateRect(lastMovedId,-1);
-    }, 40);
+    }, 100);
     return false;
 });
 rotation_clockwise.mousedown(function(){
     timeout = setInterval(function(){
         rotateRect(lastMovedId,1);
-    }, 40);
+    }, 100);
     return false;
 });
 $(document).mouseup(function(){
