@@ -17,9 +17,7 @@
 		&emsp;**[General Introduction, Setup & Computing 101]()**  
 		&emsp;Tutor:
 	- Afternoon (13:30 - 15:30):  
-		&emsp;**[Introduction to Python,  
-		&emsp;Variables,  
-		&emsp;Primitive Data Types: Integer, Float, String, Boolean]()**  
+		&emsp;**[Introduction to Python, Variables, Primitive Data Types: Integer, Float, String, Boolean]()**  
 		&emsp;Tutor:
 - #### Tuesday
 	- Afternoon (13:30 - 15:30):  
