@@ -21,37 +21,27 @@
 ###  Week 1
 
 - #### Monday
-	- **Morning** (10:30 - 12:30):		&ensp;&ensp;&ensp;General Introduction, Setup & Computing 101
-		* Lecturer:
-		* Notebook-Link:
-
-	- **Afternoon** (13:30 - 15:30):	&ensp;&ensp;Introduction to Python, Variables and Primitive Data Types
-		* Lecturer:
-		* Notebook-Link:
+	- **Morning** (10:30 - 12:30):		[General Introduction, Setup & Computing 101]()
+		Tutor:
+	- **Afternoon** (13:30 - 15:30):	[Introduction to Python, Variables and Primitive Data Types]()
+		Tutor:
 - #### Tuesday
-	- **Afternoon** (13:30 - 15:30):	&ensp;&ensp;Exercises
-		* Lecturer:
-		* Notebook-Link:
+	- **Afternoon** (13:30 - 15:30):	[Practice Session 1]()
+		Tutor:
 - #### Wednesday
-	- **Morning** (10:30 - 12:30):		&ensp;&ensp;&ensp;
-		* Lecturer:
-		* Notebook-Link:
-
-	- **Afternoon** (13:30 - 15:30):	
-		* Lecturer:
-		* Notebook-Link:
+	- **Morning** (10:30 - 12:30):		[Sequential Datatypes: Lists and Dictionaries]()
+		Tutor:
+	- **Afternoon** (13:30 - 15:30):	[Control Structures I: If-Else Conditions]()
+		Tutor:
 - #### Thursday
-	- **Afternoon** (13:30 - 15:30):	
-		* Lecturer:
-		* Notebook-Link:
+	- **Afternoon** (13:30 - 15:30):	[Practice Session 2]()
+		Tutor:
 - #### Friday
-	- **Morning** (10:30 - 12:30):		General Introduction, Setup & Computing 101
-		* Lecturer:
-		* Notebook-Link:
+	- **Morning** (10:30 - 12:30):		[Control Structures II: For-Loops]()
+		Tutor:
 
-	- **Afternoon** (13:30 - 15:30):	Introduction to Python, Variables and Primitive Data Types
-		* Lecturer:
-		* Notebook-Link:
+	- **Afternoon** (13:30 - 15:30):	[Practical Use-Cases: Frequency Distributions in Python]()
+		Tutor:
 *******************************************
 ###  Week 2
 
