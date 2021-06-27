@@ -1,3 +1,8 @@
+<style>
+H3{color:#2F4F4F; !important;}
+p{color:Black !important;}
+</style>
+
 # MA Digital Text Analysis: Bootcamp 
 
 ## Administrative Information
@@ -21,7 +26,7 @@
 	- **Afternoon** (13:30 - 15:30)
 
 
-### <span style="color:#2F4F4F;"> Week 2</span>
+###  Week 2
 
 ### <span style="color:#2F4F4F;"> Week 3</span>
 
