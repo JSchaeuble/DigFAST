@@ -22,7 +22,7 @@
 
 - #### Monday
 	- Morning (10:30 - 12:30):  
-		**[General Introduction, Setup & Computing 101]()**  
+		&emsp;**[General Introduction, Setup & Computing 101]()**  
 		Tutor:
 	- Afternoon (13:30 - 15:30):  
 		**[Introduction to Python, Variables and Primitive Data Types]()**  
@@ -47,7 +47,7 @@
 		**[Control Structures II: For-Loops]()**  
 		Tutor:
 	- Afternoon (13:30 - 15:30):  
-		**[Practical Use-Cases: Frequency Distributions in Python]()**  
+		**[Practical Use: Frequency Distributions in Python]()**  
 		Tutor:  
 *******************************************
 ###  Week 2
