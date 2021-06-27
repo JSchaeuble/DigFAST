@@ -50,13 +50,13 @@
 ###  Week 3
 
 
-## Staff:
-	- Coordinators
-		- [Coordinator 1](mailto)
-		- [Coordinator 2](mailto)
-		- [Coordinator 3](mailto)
-	- Tutors
-		- [Tutor 1](mailto)
-		- [Tutor 2](mailto)
-		- [Tutor 3](mailto)
+## Staff
+- Coordinators
+	- [Coordinator 1](mailto)
+	- [Coordinator 2](mailto)
+	- [Coordinator 3](mailto)
+- Tutors
+	- [Tutor 1](mailto)
+	- [Tutor 2](mailto)
+	- [Tutor 3](mailto)
 
