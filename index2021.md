@@ -13,7 +13,7 @@
 
 ## Schedule
 
-### Week 1
+### <span style="color:darkslategray"> Week 1</span>
 
 - #### Monday
 	- **Morning** (10:30 - 12:30)
@@ -21,8 +21,8 @@
 	- **Afternoon** (13:30 - 15:30)
 
 
-### Week 2
+### <span style="color:darkslategray"> Week 2</span>
 
-### Week 3
+### <span style="color:darkslategray"> Week 3</span>
 
 
