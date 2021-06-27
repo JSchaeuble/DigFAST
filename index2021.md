@@ -9,19 +9,21 @@
 - Textbook: Hammond, M. (2020). *Python for Linguists*. Cambridge: Cambridge University Press. doi:10.1017/9781108642408
 - Staff:
 	- Coordinators
-		- Coordinator 1 [Email]()
-		- Coordinator 2 [Email]()
-		- Coordinator 3 [Email]()
+		- [Coordinator 1](mailto)
+		- [Coordinator 2](mailto)
+		- [Coordinator 3](mailto)
 	- Tutors
-		- Tutor 1 [Email]()
-		- Tutor 2 [Email]()
-		- Tutor 3 [Email]()
+		- [Tutor 1](mailto)
+		- [Tutor 2](mailto)
+		- [Tutor 3](mailto)
 
 ## Schedule
 ###  Week 1
 
 - #### Monday
-	- **Morning** (10:30 - 12:30):		[General Introduction, Setup & Computing 101]()
+	- **Morning** (10:30 - 12:30):
+			
+		[General Introduction, Setup & Computing 101]()
 		Tutor:
 	- **Afternoon** (13:30 - 15:30):	[Introduction to Python, Variables and Primitive Data Types]()
 		Tutor:
