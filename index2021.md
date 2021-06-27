@@ -8,7 +8,7 @@
 - Focus Sessions:  [Timetable]()
 - Textbook: Hammond, M. (2020). *Python for Linguists*. Cambridge: Cambridge University Press. doi:10.1017/9781108642408
 
-
+**************************************************************************
 ## Schedule
 ###  Week 1
 
@@ -49,7 +49,7 @@
 *******************************************
 ###  Week 3
 
-
+**************************************************************************
 ## Staff
 - Coordinators
 	- [Coordinator 1](mailto)
