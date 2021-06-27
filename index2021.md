@@ -18,11 +18,11 @@
 		- Tutor 3 [Email]()
 
 ## Schedule
-
+*******************************************
 ###  Week 1
 
 - #### Monday
-	- **Morning** (10:30 - 12:30):		&ensp;&ensp;General Introduction, Setup & Computing 101
+	- **Morning** (10:30 - 12:30):		&ensp;&ensp;&ensp;General Introduction, Setup & Computing 101
 		* Lecturer:
 		* Notebook-Link:
 
@@ -30,11 +30,11 @@
 		* Lecturer:
 		* Notebook-Link:
 - #### Tuesday
-	- **Afternoon** (13:30 - 15:30):	Exercises
+	- **Afternoon** (13:30 - 15:30):	&ensp;&ensp;Exercises
 		* Lecturer:
 		* Notebook-Link:
 - #### Wednesday
-	- **Morning** (10:30 - 12:30):		
+	- **Morning** (10:30 - 12:30):		&ensp;&ensp;&ensp;
 		* Lecturer:
 		* Notebook-Link:
 
@@ -53,9 +53,10 @@
 	- **Afternoon** (13:30 - 15:30):	Introduction to Python, Variables and Primitive Data Types
 		* Lecturer:
 		* Notebook-Link:
-
+*******************************************
 ###  Week 2
 
+*******************************************
 ###  Week 3
 
 
