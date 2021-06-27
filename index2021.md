@@ -3,19 +3,11 @@
 ## Administrative Information
 - Dates: 13 September 2021 - 30 September 2021
 - Point of contact: [someone@uantwerpen.be](mailto:someone@uantwerpen.be)
-- Course Material:  All course material can be found [Link]()
+- Course Material:  All course material can be found [here]()
 - Live Stream: [Link]()
 - Focus Sessions:  [Timetable]()
 - Textbook: Hammond, M. (2020). *Python for Linguists*. Cambridge: Cambridge University Press. doi:10.1017/9781108642408
-- Staff:
-	- Coordinators
-		- [Coordinator 1](mailto)
-		- [Coordinator 2](mailto)
-		- [Coordinator 3](mailto)
-	- Tutors
-		- [Tutor 1](mailto)
-		- [Tutor 2](mailto)
-		- [Tutor 3](mailto)
+
 
 ## Schedule
 ###  Week 1
@@ -57,4 +49,14 @@
 *******************************************
 ###  Week 3
 
+
+## Staff:
+	- Coordinators
+		- [Coordinator 1](mailto)
+		- [Coordinator 2](mailto)
+		- [Coordinator 3](mailto)
+	- Tutors
+		- [Tutor 1](mailto)
+		- [Tutor 2](mailto)
+		- [Tutor 3](mailto)
 
