@@ -7,27 +7,36 @@ p{color:Black !important;}
 
 ## Administrative Information
 - Dates: 13 September 2021 - 30 September 2021
-- Point of contact: [Benjamin.Burtenshaw@uantwerpen.be](mailto:Benjamin.Burtenshaw@uantwerpen.be)
+- Point of contact: [someone@uantwerpen.be](mailto:someone@uantwerpen.be)
 - Course Material:  All course material can be found [Link]()
 - Live Stream: [Link]()
 - Focus Sessions:  [Timetable]()
-- Your Lecturers:
-	- A
-	- B
-	- C
+- Textbook: Hammond, M. (2020). *Python for Linguists*. Cambridge: Cambridge University Press. doi:10.1017/9781108642408
+- Staff:
+	- Coordinators
+		- Coordinator 1
+		- Coordinator 2
+		- Coordinator 3
+	- Tutors
+		- Tutor 1
+		- Tutor 2
+		- Tutor 3
 
 ## Schedule
 
-### <span style="color:#2F4F4F;"> Week 1</span>
+###  Week 1
 
 - #### Monday
-	- **Morning** (10:30 - 12:30)
+	- **Morning** (10:30 - 12:30):		General Introduction, Setup & Computing 101
+		* Lecturer:
+		* Notebook-Link:
 
-	- **Afternoon** (13:30 - 15:30)
-
+	- **Afternoon** (13:30 - 15:30):	Introduction to Python, Variables and Primitive Data Types
+		* Lecturer:
+		* Notebook-Link:
 
 ###  Week 2
 
-### <span style="color:#2F4F4F;"> Week 3</span>
+###  Week 3
 
 
