@@ -27,7 +27,7 @@
 	- Afternoon (13:30 - 15:30):  
 		&emsp;**[Introduction to Python,  
 		&emsp;Variables,  
-		&emsp;Primitive Data Types]()**  
+		&emsp;Primitive Data Types: Integer, Float, String, Boolean]()**  
 		&emsp;Tutor:
 - #### Tuesday
 	- Afternoon (13:30 - 15:30):  
