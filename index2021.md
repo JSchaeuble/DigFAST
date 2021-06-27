@@ -15,10 +15,10 @@
 
 ### Week 1
 
-#### Monday
-- **Morning** (10:30 - 12:30)
+- #### Monday
+	- **Morning** (10:30 - 12:30)
 
-- **Afternoon** (13:30 - 15:30)
+	- **Afternoon** (13:30 - 15:30)
 
 
 ### Week 2
