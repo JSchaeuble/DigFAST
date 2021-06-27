@@ -25,7 +25,9 @@
 		&emsp;**[General Introduction, Setup & Computing 101]()**  
 		&emsp;Tutor:
 	- Afternoon (13:30 - 15:30):  
-		&emsp;**[Introduction to Python, Variables and Primitive Data Types]()**  
+		&emsp;**[Introduction to Python,  
+		&emsp;Variables,  
+		&emsp;Primitive Data Types]()**  
 		&emsp;Tutor:
 - #### Tuesday
 	- Afternoon (13:30 - 15:30):  
