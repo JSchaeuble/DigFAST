@@ -21,25 +21,33 @@
 ###  Week 1
 
 - #### Monday
-	- Morning (10:30 - 12:30): &emsp;**[General Introduction, Setup & Computing 101]()**  
+	- Morning (10:30 - 12:30):  
+		&emsp;**[General Introduction, Setup & Computing 101]()**  
 		&emsp;Tutor:
-	- Afternoon (13:30 - 15:30): &emsp;**[Introduction to Python, Variables and Primitive Data Types]()**  
+	- Afternoon (13:30 - 15:30):  
+		&emsp;**[Introduction to Python, Variables and Primitive Data Types]()**  
 		&emsp;Tutor:
 - #### Tuesday
-	- Afternoon (13:30 - 15:30): &emsp;**[Practice Session 1]()**  
+	- Afternoon (13:30 - 15:30):  
+		&emsp;**[Practice Session 1]()**  
 		&emsp;Tutor:
 - #### Wednesday
-	- Morning (10:30 - 12:30): &emsp;**[Sequential Datatypes: Lists and Dictionaries]()**  
+	- Morning (10:30 - 12:30):  
+		&emsp;**[Sequential Datatypes: Lists and Dictionaries]()**  
 		&emsp;Tutor:
-	- Afternoon (13:30 - 15:30): &emsp;**[Control Structures I: If-Else Conditions]()**  
+	- Afternoon (13:30 - 15:30):  
+		&emsp;**[Control Structures I: If-Else Conditions]()**  
 		&emsp;Tutor:
 - #### Thursday
-	- Afternoon (13:30 - 15:30): &emsp;**[Practice Session 2]()**  
+	- Afternoon (13:30 - 15:30):  
+		&emsp;**[Practice Session 2]()**  
 		&emsp;Tutor:
 - #### Friday
-	- Morning (10:30 - 12:30): &emsp;**[Control Structures II: For-Loops]()**  
+	- Morning (10:30 - 12:30):  
+		&emsp;**[Control Structures II: For-Loops]()**  
 		&emsp;Tutor:
-	- Afternoon (13:30 - 15:30): &emsp;**[Practical Use: Frequency Distributions in Python]()**  
+	- Afternoon (13:30 - 15:30):  
+		&emsp;**[Practical Use: Frequency Distributions in Python]()**  
 		&emsp;Tutor:  
 *******************************************
 ###  Week 2
